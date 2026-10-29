@@ -1,0 +1,39 @@
+1) Cos'è l'operatore di dereferenziazione e perché ne abbiamo bisogno? 
+    L'operatore di dereferenziazione (rappresentato dal simbolo asterisco *) è sibillino consente di accedere direttamente al valore (o all'oggetto) 
+    memorizzato all'indirizzo di memoria a cui punta un puntatore.
+
+    Ne abbiamo bisogno per:
+    - Leggere o modificare il valore contenuto nella cella di memoria puntata (es. *p = 10;).
+    - Accedere alla memoria allocata dinamicamente nello Heap tramite new, che non ha un nome di variabile diretto ma è raggiungibile solo tramite il suo indirizzo.
+    - Passare strutture dati complesse o grandi quantità di dati a funzioni consentendo la modifica dello stato originale (passaggio per indirizzo) senza dover copiare l'intero oggetto.
+
+
+2) Cos'è un indirizzo? Come vengono manipolati gli indirizzi di memoria in C++?
+    Un indirizzo indica una locazione di memoria.
+
+    Gli indirizzi di memoria in C++ vengono manipolati tramite puntatori(*) e reference(&).
+
+
+3) Quali informazioni su un oggetto puntato possiede un puntatore? Quali informazioni utili gli mancano?
+    Informazioni possedute dal puntatore:
+    - L'indirizzo di memoria di partenza dell'oggetto a cui punta.
+    - Il tipo di dato dell'oggetto puntato (es. int*, double*).
+
+    Informazioni utili mancanti:
+    - La dimensione della sequenza (lunghezza dell'array): Se un puntatore punta al primo elemento di un array dinamico, il puntatore non sa quanti elementi ci sono nell'array.
+    - La validità della memoria: Un puntatore non sa se l'indirizzo a cui punta contiene ancora dati validi o se sia diventato un dangling pointer (memoria già deallocata o fuori scope).
+
+
+4) A cosa può puntare un puntatore?
+    Un puntatore in C++ può puntare a:
+    - Variabili ordinarie allocate nello stack (es. int, double, oggetti di classi).
+    - Blocchi di memoria allocati dinamicamente nello heap (tramite new o malloc).
+    - Elementi di un array o di un buffer.
+    - Altri puntatori (puntatori a puntatori, es. int**).
+    - A nulla (nullptr o 0): Un puntatore nullo indica esplicitamente che non si sta puntando ad alcuna locazione di memoria valida.
+
+5) Quando abbiamo bisogno di un puntatore (invece di un riferimento o di un oggetto con nome)?
+    Ne abbiamo bisogno per:
+    - Riassegnabilità (Modificare la destinazione): Un riferimento deve essere inizializzato al momento della creazione e non può mai essere cambiato per riferirsi a un'altra variabile.
+    - Rappresentare l'assenza di un valore (nullptr): Un riferimento deve sempre riferirsi a un oggetto esistente. Se una risorsa o un parametro è opzionale o può non esistere, si usa un puntatore che può valere nullptr.
+    - Gestione della memoria dinamica nello Heap: Quando si allocano oggetti o array di dimensione variabile durante il runtime tramite new, l'unico modo di gestirli è tramite puntatori

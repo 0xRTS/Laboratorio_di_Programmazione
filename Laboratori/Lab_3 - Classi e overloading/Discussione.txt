@@ -1,0 +1,47 @@
+1) Quali sono le due parti di una classe?
+    Due elementi chiave:
+    – Rappresentazione (representation): un tipo deve sapere come rappresentare i dati necessari in un oggetto
+    – Operazioni (operations): un tipo deve sapere che operazioni possono essere applicate a un oggetto
+
+2) Qual è la differenza tra l'interfaccia e l'implementazione in una classe?
+    Interfaccia (public)
+    – Punto di vista dell'utente
+    – Accesibile agli utenti
+    
+    Implementazione (private)
+    – Punto di vista dell'implementatore
+    – Non direttamente accessibile
+    – Lettura/scrittura solo tramite l'interfaccia
+
+3) Perché per il tipo Date si usa un costruttore al posto di una funzione init_day()?
+    Il costruttore garantisce l'inizializzazione automatica e corretta dell'oggetto al momento della sua creazione, 
+    impedendo l'esistenza di oggetti Date non validi o dimenticati di inizializzare, cosa che 
+    potrebbe invece accadere lasciando il compito a una funzione esterna o separata come init_day().
+    (init_day(): creazione + inizializzazione seprate | costruttore: creazione + inizializzazione contemporaneamente)
+
+4) Che cos'è un invariante? Fornisci degli esempi.
+    Un invariante è una regola o condizione che definisce quando lo stato di un oggetto è valido. 
+    Deve essere stabilito dal costruttore e mantenuto da qualsiasi funzione membro.
+
+    Esempio: controllo che il mese sia compreso tra 1 e 12
+
+5) Quando le funzioni dovrebbero essere inserite nella definizione della classe e quando dovrebbero essere definite all'esterno? Perché?
+    - Quando definire le funzioni ALL'INTERNO della classe (In-Class Definition)
+        Solo per funzioni molto brevi (tipicamente di 1 o 2 righe, come le funzioni getter o setter es. int month() { return m; }).
+
+        Perché:
+        Inlining automatico: Le funzioni definite dentro la classe vengono considerate automaticamente inline. 
+        Il compilatore sostituisce la chiamata con il codice stesso della funzione, eliminando l'overhead di tempo della chiamata a funzione.
+
+        Efficienza: Velocizza l'esecuzione per operazioni elementari usate di frequente.
+
+    - Quando definire le funzioni ALL'ESTERNO della classe (Out-of-Class Definition)
+        Per la maggior parte delle funzioni membro e per tutte quelle con logica complessa o corposa (es. void Date::add_day(int n)).
+
+        Perché:
+
+        Separazione tra Interfaccia e Implementazione: Mantiene la dichiarazione della classe (l'interfaccia pubblica) pulita, sintetica e 
+        facile da leggere per chi deve usare l'oggetto, senza farla affollare dai dettagli implementativi.
+        
+        Riduzione dei tempi di ricompilazione: Se si modifica il codice di una funzione definita fuori dalla classe, 
+        non occorre ricompilare tutti i file del programma che usano quella classe (cosa che invece accadrebbe se la funzione fosse definita inline dentro l'header della classe).

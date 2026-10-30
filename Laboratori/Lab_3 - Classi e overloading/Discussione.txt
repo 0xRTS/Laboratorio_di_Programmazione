@@ -39,9 +39,8 @@
         Per la maggior parte delle funzioni membro e per tutte quelle con logica complessa o corposa (es. void Date::add_day(int n)).
 
         Perché:
-
         Separazione tra Interfaccia e Implementazione: Mantiene la dichiarazione della classe (l'interfaccia pubblica) pulita, sintetica e 
         facile da leggere per chi deve usare l'oggetto, senza farla affollare dai dettagli implementativi.
-        
+
         Riduzione dei tempi di ricompilazione: Se si modifica il codice di una funzione definita fuori dalla classe, 
         non occorre ricompilare tutti i file del programma che usano quella classe (cosa che invece accadrebbe se la funzione fosse definita inline dentro l'header della classe).

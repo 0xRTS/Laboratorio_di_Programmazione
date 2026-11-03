@@ -69,6 +69,14 @@ Rational::Rational(int value) //B (costruttore come init list)
     if(!is_valid()) throw Invalid();
 }
 
+/*definito nella classe 
+Rational(int value) //B (costruttore come assegnamento)
+{ //Prima dell'assegnamento esplicito avviene un assegnamento implicito che noi non vediamo
+    numerator = value;
+    denominator =  1;
+}
+*/
+
 Rational::Rational(int num, int den) //C (costruttore come init list)
     : numerator{num}, denominator{den} 
 {
@@ -83,6 +91,8 @@ bool Rational::is_valid(){ //Controlo validità denominatore
     }
 }
 
+//-------------------------------------------------------------------------------------------------
+
 Rational Rational::operator=(const Rational& r){
     numerator = r.numerator;
     denominator = r.denominator;
@@ -95,9 +105,11 @@ Rational Rational::operator=(const int r){
     return Rational{numerator, denominator};
 }
 
+//-------------------------------------------------------------------------------------------------
+
 Rational Rational::operator+(const Rational& r) const{
-    int num = numerator * r.get_denominator() + denominator * r.get_numerator();
-    int den = denominator * r.get_denominator();
+    int num = numerator * r.denominator + denominator * r.numerator;
+    int den = denominator * r.denominator;
     return Rational{num, den};
 }
 
@@ -107,15 +119,27 @@ Rational Rational::operator+(const int r) const{
 }
 
 /*
-Rational operator+(const Rational r1, const Rational r2){
+Rational operator+(const Rational& r1, const Rational& r2){
     int num = r1.get_numerator() * r2.get_denominator() + r1.get_denominator() * r2.get_numerator();
     int den = r1.get_denominator() * r2.get_denominator(); 
     return Rational{num, den};
+}
+    
+Rational operator+(const Rational& r1, const int r2){
+    int num = r1.get_numerator() + r2 * r1.get_denominator();
+    return Rational{num, r1.get_denominator()};
+}
+
+Rational operator+(const int r1, const Rational& r2){
+    int num = r1 * r2.get_denominator() + r2.get_numerator();
+    return Rational{num, r2.get_denominator()};
 }*/
 
+//-------------------------------------------------------------------------------------------------
+
 Rational Rational::operator-(const Rational& r) const{
-    int num = numerator * r.get_denominator() - denominator * r.get_numerator();
-    int den = denominator * r.get_denominator();
+    int num = numerator * r.denominator - denominator * r.numerator;
+    int den = denominator * r.denominator;
     return Rational{num, den};
 }
 
@@ -125,15 +149,27 @@ Rational Rational::operator-(const int r) const{
 }
 
 /*
-Rational operator-(const Rational r1, const Rational r2){
+Rational operator-(const Rational& r1, const Rational& r2){
     int num = r1.get_numerator() * r2.get_denominator() - r1.get_denominator() * r2.get_numerator();
     int den = r1.get_denominator() * r2.get_denominator(); 
     return Rational{num, den};
+}
+    
+Rational operator-(const Rational& r1, const int r2){
+    int num = r1.get_numerator() - r2 * r1.get_denominator();
+    return Rational{num, r1.get_denominator()};
+}
+
+Rational operator-(const int r1, const Rational& r2){
+    int num = r1 * r2.get_denominator() - r2.get_numerator();
+    return Rational{num, r2.get_denominator()};
 }*/
 
+//-------------------------------------------------------------------------------------------------
+
 Rational Rational::operator*(const Rational& r) const{
-    int num = numerator * r.get_numerator();
-    int den = denominator * r.get_denominator();
+    int num = numerator * r.numerator;
+    int den = denominator * r.denominator;
     return Rational{num, den};
 }
 
@@ -143,15 +179,25 @@ Rational Rational::operator*(const int r) const{
 }
 
 /*
-Rational operator*(const Rational r1, const Rational r2){
+Rational operator*(const Rational& r1, const Rational& r2){
     int num = r1.get_numerator() * r2.get_numerator();
     int den = r1.get_denominator() * r2.get_denominator(); 
     return Rational{num, den};
+}
+    
+Rational operator*(const Rational& r1, const int r2){
+    return Rational{r1.get_numerator() * r2, r1.get_denominator()};
+}
+
+Rational operator*(const int r1, const Rational& r2){
+    return Rational{r1 * r2.get_numerator(), r2.get_denominator()};
 }*/
 
+//-------------------------------------------------------------------------------------------------
+
 Rational Rational::operator/(const Rational& r) const{
-    int num = numerator * r.get_denominator();
-    int den = denominator * r.get_numerator();
+    int num = numerator * r.denominator;
+    int den = denominator * r.numerator;
     return Rational{num, den};
 }
 
@@ -161,61 +207,83 @@ Rational Rational::operator/(const int r) const{
 }
 
 /*
-Rational operator/(const Rational r1, const Rational r2){
+Rational operator/(const Rational& r1, const Rational& r2){
     int num = r1.get_numerator() * r2.get_denominator();
     int den = r1.get_denominator() * r2.get_numerator(); 
     return Rational{num, den};
+}
+    
+Rational operator/(const Rational& r1, const int r2){
+    int den = r1.get_denominator() * r2;
+    return Rational{r1.get_numerator(), den};
+}
+
+Rational operator/(const int r1, const Rational& r2){
+    // r1 / (n/d) = (r1*d) / n
+    int num = r1 * r2.get_denominator();
+    return Rational{num, r2.get_numerator()};
 }*/
 
+//-------------------------------------------------------------------------------------------------
+
 bool Rational::operator==(const Rational& r) const{
-    if(numerator*r.get_denominator() == denominator * r.get_numerator()){
-        return true;
-    }else{
-        return false;
-    }
+    return numerator*r.denominator == denominator * r.numerator;
 }
 
 bool Rational::operator==(const int r) const{
-    if(numerator == denominator * r){
-        return true;
-    }else{
-        return false;
-    }
+    return numerator == denominator * r;
 }
 
+/*
+bool operator==(const Rational& r1, const Rational& r2){
+    return r1.get_numerator()*r2.get_denominator() == r1.get_denominator() * r2.get_numerator();
+}
+
+bool operator==(const Rational& r1, const int r){
+    return r1.get_numerator() == r1.get_denominator() * r;
+}*/
+
+//-------------------------------------------------------------------------------------------------
+
 bool Rational::operator>(const Rational& r) const{
-    if(numerator*r.get_denominator() > denominator * r.get_numerator()){
-        return true;
-    }else{
-        return false;
-    }
+    return numerator*r.denominator > denominator * r.numerator;
 }
 
 bool Rational::operator>(const int r) const{
-    if(numerator > denominator * r){
-        return true;
-    }else{
-        return false;
-    }
+    return numerator > denominator * r;
 }
 
+/*
+bool operator>(const Rational& r1, const Rational& r2){
+    return r1.get_numerator()*r2.get_denominator() > r1.get_denominator() * r2.get_numerator();
+}
+
+bool operator>(const Rational& r1, const int r){
+    return r1.get_numerator() > r1.get_denominator() * r;
+}*/
+
+//-------------------------------------------------------------------------------------------------
+
 bool Rational::operator<(const Rational& r) const{
-    if(numerator*r.get_denominator() < denominator * r.get_numerator()){
-        return true;
-    }else{
-        return false;
-    }
+    return numerator*r.denominator < denominator * r.numerator;
 }
 
 bool Rational::operator<(const int r) const{
-    if(numerator < denominator * r){
-        return true;
-    }else{
-        return false;
-    }
+    return numerator < denominator * r;
 }
 
-//Per queste invece (>> e <<) che sono helper functions che vanno a modificare gli oggetti no metto const dopo la funzione
+/*
+bool operator<(const Rational& r1, const Rational& r2){
+    return r1.get_numerator()*r2.get_denominator() < r1.get_denominator() * r2.get_numerator();
+}
+
+bool operator<(const Rational& r1, const int r){
+    return r1.get_numerator() < r1.get_denominator() * r;
+}*/
+
+//-------------------------------------------------------------------------------------------------
+//Per queste invece (>> e <<) che sono helper functions che vanno a modificare gli oggetti, non metto const dopo la funzione
+
 ostream& operator<<(ostream& os, const Rational& r){
     return os << r.get_numerator() << "/" << r.get_denominator();
 }
@@ -236,7 +304,8 @@ istream& operator>>(istream& os, Rational& r){
     return os;
 }
 
-// Helper di test
+//-------------------------------------------------------------------------------------------------
+
 int passed = 0, failed = 0;
 
 void check(const string& nome, bool condizione){
@@ -326,12 +395,3 @@ int main(){
 
     return 0;
 }
-
-
-/*Ovviamente definito nella classe 
-Rational(int value) //B (costruttore come assegnamento)
-{ //Prima dell'assegnamento esplicito avviene un assegnamento implicito che noi non vediamo
-    numerator = value;
-    denominator =  1;
-}
-*/

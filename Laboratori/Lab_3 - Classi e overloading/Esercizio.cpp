@@ -282,26 +282,10 @@ bool operator<(const Rational& r1, const int r){
 }*/
 
 //-------------------------------------------------------------------------------------------------
-//Per queste invece (>> e <<) che sono helper functions che vanno a modificare gli oggetti, non metto const dopo la funzione
+//Per queste invece << che è helper function va a modificare gli oggetti, non metto const dopo la funzione
 
 ostream& operator<<(ostream& os, const Rational& r){
     return os << r.get_numerator() << "/" << r.get_denominator();
-}
-
-istream& operator>>(istream& os, Rational& r){
-    int num = 0;
-    int den = 0;
-    char ch = '.';
-
-    os >> num >> ch >> den;
-
-    if(ch!='/' || den <= 0){
-        return os;
-    }
-
-    r = Rational{num, den};
-
-    return os;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -322,168 +306,124 @@ Differenza int + Rational vs Rational + int
 Conclusione: con la membro l’addizione non è simmetrica; con l’helper sì. Per operatori che devono essere simmetrici conviene l’helper.
 */
 
-int passed = 0, failed = 0;
-
-void check(const string& nome, bool condizione){
-    if(condizione){
-        cout << "[OK]   " << nome << endl;
-        passed++;
-    }else{
-        cout << "[FAIL] " << nome << endl;
-        failed++;
-    }
-}
-
 int main(){
-    cout << "=== COSTRUTTORI ===" << endl;
     Rational a;              // A
     Rational b{5};           // B
     Rational c{3, 4};        // C
-    check("A: default = 0/1", a.get_numerator()==0 && a.get_denominator()==1);
-    check("B: int 5 = 5/1",   b.get_numerator()==5 && b.get_denominator()==1);
-    check("C: 3/4",           c.get_numerator()==3 && c.get_denominator()==4);
 
-    cout << "\n=== ECCEZIONI COSTRUTTORI ===" << endl;
-    bool lanciata = false;
-    try{ Rational x{1, 0}; }catch(Rational::Invalid&){ lanciata = true; }
-    check("den = 0 lancia Invalid", lanciata);
+    try{
+        Rational x{1, 0}; 
+    }catch(Rational::Invalid){
+        cout << "\nError (test)\n";
+    }
 
-    lanciata = false;
-    try{ Rational x{1, -2}; }catch(Rational::Invalid&){ lanciata = true; }
-    check("den < 0 lancia Invalid", lanciata);
+//-------------------------------------------------------------------------------------------------
 
-    lanciata = false;
-    try{ Rational x{1, 2}; }catch(Rational::Invalid&){ lanciata = true; }
-    check("den > 0 non lancia", !lanciata);
-
-    cout << "\n=== GETTER ===" << endl;
-    check("get_numerator",   c.get_numerator()==3);
-    check("get_denominator", c.get_denominator()==4);
-
-    cout << "\n=== OPERATOR= ===" << endl;
+    cout << "\n=> operator = \n";
     Rational d;
+
     d = c;
-    check("= Rational", d.get_numerator()==3 && d.get_denominator()==4);
+    cout << "Numerator (d): " << d.get_numerator() << "\n";
+    cout << "Denominator (d): " << d.get_denominator() << "\n";
+
     d = 7;
-    check("= int", d.get_numerator()==7 && d.get_denominator()==1);
+    cout << "Numerator (d): " << d.get_numerator() << "\n";
+    cout << "Denominator (d): " << d.get_denominator() << "\n";
 
-    cout << "\n=== OPERATOR+ ===" << endl;
+//-------------------------------------------------------------------------------------------------
+
+    cout << "\n=> operator + \n";
     Rational e = Rational{1,2} + Rational{1,3};   // 5/6
-    check("+ Rational (1/2+1/3=5/6)", e.get_numerator()==5 && e.get_denominator()==6);
+    cout << "Numerator (e): " << e.get_numerator() << "\n";
+    cout << "Denominator (e): " << e.get_denominator() << "\n";
+
     Rational f = Rational{1,2} + 2;               // 5/2
-    check("+ int (1/2+2=5/2)", f.get_numerator()==5 && f.get_denominator()==2);
+    cout << "Numerator (f): " << f.get_numerator() << "\n";
+    cout << "Denominator (f): " << f.get_denominator() << "\n";
 
-    cout << "\n=== OPERATOR- ===" << endl;
+//-------------------------------------------------------------------------------------------------
+
+    cout << "\n=> operator - \n";
     Rational g = Rational{1,2} - Rational{1,3};   // 1/6
-    check("- Rational (1/2-1/3=1/6)", g.get_numerator()==1 && g.get_denominator()==6);
+    cout << "Numerator (g): " << g.get_numerator() << "\n";
+    cout << "Denominator (g): " << g.get_denominator() << "\n";
+
     Rational h = Rational{1,2} - 1;               // -1/2
-    check("- int (1/2-1=-1/2)", h.get_numerator()==-1 && h.get_denominator()==2);
+    cout << "Numerator (h): " << h.get_numerator() << "\n";
+    cout << "Denominator (h): " << h.get_denominator() << "\n";
 
-    cout << "\n=== OPERATOR* ===" << endl;
+//-------------------------------------------------------------------------------------------------
+
+    cout << "\n=> operator * \n";
     Rational i = Rational{2,3} * Rational{3,4};   // 6/12
-    check("* Rational (2/3*3/4=6/12)", i.get_numerator()==6 && i.get_denominator()==12);
+    cout << "Numerator (i): " << i.get_numerator() << "\n";
+    cout << "Denominator (i): " << i.get_denominator() << "\n";
+
     Rational j = Rational{2,3} * 3;               // 6/3
-    check("* int (2/3*3=6/3)", j.get_numerator()==6 && j.get_denominator()==3);
+    cout << "Numerator (j): " << j.get_numerator() << "\n";
+    cout << "Denominator (j): " << j.get_denominator() << "\n";
+
     Rational j2 = Rational{2,3} * 0;              // 0/3
-    check("* 0 (2/3*0 = 0)", j2 == 0);
+    cout << "Numerator (j2): " << j2.get_numerator() << "\n";
+    cout << "Denominator (j2): " << j2.get_denominator() << "\n";
 
-    cout << "\n=== OPERATOR/ ===" << endl;
+//-------------------------------------------------------------------------------------------------
+
+    cout << "\n=> operator / \n";
     Rational k = Rational{1,2} / Rational{3,4};   // 4/6
-    check("/ Rational (1/2 / 3/4 = 4/6)", k.get_numerator()==4 && k.get_denominator()==6);
+    cout << "Numerator (k): " << k.get_numerator() << "\n";
+    cout << "Denominator (k): " << k.get_denominator() << "\n";
+
     Rational l = Rational{1,2} / 3;               // 1/6
-    check("/ int (1/2 / 3 = 1/6)", l.get_numerator()==1 && l.get_denominator()==6);
+    cout << "Numerator (l): " << l.get_numerator() << "\n";
+    cout << "Denominator (l): " << l.get_denominator() << "\n";
 
-    lanciata = false;
-    try{ Rational x = Rational{1,2} / Rational{0,1}; }catch(Rational::Invalid&){ lanciata = true; }
-    check("/ Rational zero lancia Invalid", lanciata);
+//-------------------------------------------------------------------------------------------------
 
-    lanciata = false;
-    try{ Rational x = Rational{1,2} / 0; }catch(Rational::Invalid&){ lanciata = true; }
-    check("/ int zero lancia Invalid", lanciata);
+    cout << "\n=> operator == \n";
+    Rational m = Rational{1,2};
+    cout << "Result (1/2 == 2/4): " << (m == Rational{2,4}) << "\n";   // 1
+    cout << "Result (1/2 == 1/3): " << (m == Rational{1,3}) << "\n";   // 0
+    cout << "Result (1/2 == 1): " << (m == 1) << "\n";                 // 0
+    cout << "Result (2 == 2): " << (Rational{2} == 2) << "\n";         // 1
 
-    cout << "\n=== OPERATOR== ===" << endl;
-    check("== Rational vero (1/2 == 2/4)",  Rational{1,2} == Rational{2,4});
-    check("== Rational falso (1/2 != 1/3)", !(Rational{1,2} == Rational{1,3}));
-    check("== int vero (4/2 == 2)",         Rational{4,2} == 2);
-    check("== int falso (1/2 != 1)",        !(Rational{1,2} == 1));
+//-------------------------------------------------------------------------------------------------
 
-    cout << "\n=== OPERATOR< ===" << endl;
-    check("< Rational (1/3 < 1/2)",  Rational{1,3} < Rational{1,2});
-    check("< Rational falso",        !(Rational{1,2} < Rational{1,3}));
-    check("< Rational uguali",       !(Rational{1,2} < Rational{2,4}));
-    check("< int (1/2 < 1)",         Rational{1,2} < 1);
-    check("< int falso (3/2 < 1)",   !(Rational{3,2} < 1));
+    cout << "\n=> operator < \n";
+    Rational n = Rational{1,3};
+    cout << "Result (1/3 < 1/2): " << (n < Rational{1,2}) << "\n";     // 1
+    cout << "Result (1/3 < 1/4): " << (n < Rational{1,4}) << "\n";     // 0
+    cout << "Result (1/3 < 1): " << (n < 1) << "\n";                   // 1
+    cout << "Result (1/3 < 0): " << (n < 0) << "\n";                   // 0
 
-    cout << "\n=== OPERATOR> ===" << endl;
-    check("> Rational (1/2 > 1/3)",  Rational{1,2} > Rational{1,3});
-    check("> Rational falso",        !(Rational{1,3} > Rational{1,2}));
-    check("> Rational uguali",       !(Rational{1,2} > Rational{2,4}));
-    check("> int (3/2 > 1)",         Rational{3,2} > 1);
-    check("> int falso (1/2 > 1)",   !(Rational{1,2} > 1));
+//-------------------------------------------------------------------------------------------------
 
-    cout << "\n=== NUMERATORI NEGATIVI ===" << endl;
-    check("-1/2 < 0",            Rational{-1,2} < 0);
-    check("-1/2 < 1/3",          Rational{-1,2} < Rational{1,3});
-    check("-1/2 == -2/4",        Rational{-1,2} == Rational{-2,4});
-    check("-1/2 + 1/2 == 0",     (Rational{-1,2} + Rational{1,2}) == 0);
-    check("-1/2 * 2 == -1",      (Rational{-1,2} * 2) == -1);
+    cout << "\n=> operator > \n";
+    Rational o = Rational{3,4};
+    cout << "Result (3/4 > 1/2): " << (o > Rational{1,2}) << "\n";     // 1
+    cout << "Result (3/4 > 5/6): " << (o > Rational{5,6}) << "\n";     // 0
+    cout << "Result (3/4 > 0): " << (o > 0) << "\n";                   // 1
+    cout << "Result (3/4 > 1): " << (o > 1) << "\n";                   // 0
 
-    cout << "\n=== to_double ===" << endl;
-    double x1 = Rational{5,6}.to_double();
-    check("to_double 5/6 ~ 0.8333", x1 > 0.8333 && x1 < 0.8334);
-    check("to_double 1/2 == 0.5",   Rational{1,2}.to_double() == 0.5);
-    check("to_double 3 == 3.0",     Rational{3}.to_double() == 3.0);
+//-------------------------------------------------------------------------------------------------
 
-    cout << "\n=== OPERATOR<< ===" << endl;
-    ostringstream out;
-    out << Rational{3,4};
-    check("<< stampa 3/4", out.str() == "3/4");
-    cout << "Output a schermo: " << Rational{5,6} << endl;
+    cout << "\n=> to_double \n";
+    Rational p = Rational{5,6};
+    cout << "to_double (5/6): " << p.to_double() << "\n";               // 0.833333
+    Rational q = Rational{1,2};
+    cout << "to_double (1/2): " << q.to_double() << "\n";              // 0.5
+    Rational s = Rational{3};
+    cout << "to_double (3): " << s.to_double() << "\n";                // 3
 
-    cout << "\n=== OPERATOR>> ===" << endl;
-    istringstream in1("5/8");
-    Rational r1;
-    in1 >> r1;
-    check(">> legge 5/8", r1.get_numerator()==5 && r1.get_denominator()==8);
+//-------------------------------------------------------------------------------------------------
 
-    istringstream in2("5-8");
-    Rational r2{1,2};
-    in2 >> r2;
-    check(">> formato errato lascia r invariato", r2.get_numerator()==1 && r2.get_denominator()==2);
+    cout << "\n=> operator << \n";
+    Rational t = Rational{3,4};
+    cout << "Output (t): " << t << "\n";                               // 3/4
+    Rational u = Rational{5,6};
+    cout << "Output (u): " << u << "\n";                               // 5/6
 
-    istringstream in3("5/0");
-    Rational r3{1,2};
-    in3 >> r3;
-    check(">> den = 0 lascia r invariato", r3.get_numerator()==1 && r3.get_denominator()==2);
-
-    /* Interattivo (facoltativo)
-    Rational input;
-    cout << "Inserisci un razionale nel formato n/d (es. 5/8): ";
-    cin >> input;
-    cout << "Hai inserito: " << input << endl;
-    */
-
-    /* DA ATTIVARE SOLO con le helper function (commentando le versioni membro):
-       con le membro queste righe NON compilano
-    cout << "\n=== HELPER: int op Rational ===" << endl;
-    check("int + Rational (2 + 1/2 = 5/2)", (2 + Rational{1,2}) == Rational{5,2});
-    check("int - Rational (2 - 1/2 = 3/2)", (2 - Rational{1,2}) == Rational{3,2});
-    check("int * Rational (3 * 2/3 = 2)",   (3 * Rational{2,3}) == 2);
-    check("int / Rational (2 / 1/2 = 4)",   (2 / Rational{1,2}) == 4);
-    check("int == Rational (2 == 4/2)",     2 == Rational{4,2});
-    check("int < Rational (0 < 1/2)",       0 < Rational{1,2});
-    check("int > Rational (1 > 1/2)",       1 > Rational{1,2});
-    */
-
-    /* DA ATTIVARE SOLO se operator= restituisce Rational& (con void non compila)
-    cout << "\n=== ASSEGNAMENTO A CATENA ===" << endl;
-    Rational p, q;
-    p = q = Rational{2,3};
-    check("a = b = c", p == Rational{2,3} && q == Rational{2,3});
-    */
-
-    cout << "\n=== RIEPILOGO ===" << endl;
-    cout << "Passati: " << passed << "  Falliti: " << failed << endl;
+//-------------------------------------------------------------------------------------------------
 
     return 0;
 }

@@ -333,17 +333,6 @@ void check(const string& nome, bool condizione){
         failed++;
     }
 }
-int passed = 0, failed = 0;
-
-void check(const string& nome, bool condizione){
-    if(condizione){
-        cout << "[OK]   " << nome << endl;
-        passed++;
-    }else{
-        cout << "[FAIL] " << nome << endl;
-        failed++;
-    }
-}
 
 int main(){
     cout << "=== COSTRUTTORI ===" << endl;

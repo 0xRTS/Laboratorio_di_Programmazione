@@ -20,6 +20,7 @@ class MyVector{
         void push_back(double value);
         double pop_back();
         void reserve(int dim);
+        const double& operator[](int n);
     };
 
 MyVector::MyVector(int size) //costruttore 
@@ -87,7 +88,33 @@ void MyVector::reserve(int dim){
     }
 }
 
+const double& MyVector::operator[](int n){
+    return elem[n];
+}
+
 int main(){
+    MyVector a;
+    MyVector b(3);
+    MyVector c {1, 4};
+
+    //a.at(0);
+    a.push_back(13);
+    cout << "a.pop_back = " << a.pop_back() << "\n";
+    
+    c.push_back(3);
+    c.push_back(6);
+    c.push_back(7);
+    cout << "c.pop_back = " << c.pop_back() << "\n";
+    cout << "c.pop_back = " << c.pop_back() << "\n";
+    cout << "c.pop_back = " << c.pop_back() << "\n";
+    cout << "c.pop_back = " << c.pop_back() << "\n";
+    cout << "b[2]: " << b[2] << "\n";
+
+    try{
+        c.at(10);
+    }catch(MyVector::Invalid){
+        cout << "c.at(10): errore";
+    }
     
     return 0;
 }
